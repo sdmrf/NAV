@@ -12,31 +12,35 @@
         <div class="date" id="currentDate"></div>
     </header>
     <main>
-        <div class="left-panel">
-            <div class="list-header">
-                <span>Sr. no</span>
-                <span>Number</span>
-                <span>Users</span>
-                <span>Amount</span>
+        <div class="container">
+            <div class="left-panel">
+                <div class="list-header">
+                    <span>Sr. no</span>
+                    <span>Number</span>
+                    <span>Users</span>
+                    <span>Amount</span>
+                </div>
+                <div class="list-content" id="list-content"></div>
             </div>
-            <div class="list-content" id="list-content"></div>
-        </div>
-        <div class="center-panel">
-            <textarea id="numberInput" placeholder="Enter Amount and Number"></textarea>
-            <button onclick="submit()">Submit</button>
-            <button onclick="reset()">Reset</button>
-            <button onclick="clear()">Clear</button>
-            <button onclick="print()">Print</button>
-        </div>
-        <div class="number-boxes" id="numberBoxes"></div>
-        <div class="right-panel">
-            <div class="total-amount">
-                <span>Total Amount</span>
-                <span id="totalAmount">0</span>
+            <div class="center-panel">
+                <textarea id="numberInput" placeholder="Enter Amount and Number"></textarea>
+                <div class="buttons">
+                    <button onclick="submitNumbers()">Submit</button>
+                    <button onclick="resetData()">Reset</button>
+                    <button onclick="clearInput()">Clear</button>
+                    <button onclick="print()">Print</button>
+                </div>
+                <div class="number-boxes" id="numberBoxes"></div>
             </div>
-            <div class="total-users">
-                <span>Total Users</span>
-                <span id="totalUsers">0</span>
+            <div class="right-panel">
+                <div class="total-amount">
+                    <span>Total Amount:</span>
+                    <span id="totalAmount">0</span>
+                </div>
+                <div class="total-users">
+                    <span>Total Users:</span>
+                    <span id="totalUsers">0</span>
+                </div>
             </div>
         </div>
     </main>
