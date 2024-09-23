@@ -22,14 +22,17 @@ const createElement = (tag, className = '', innerHTML = '') => {
     return element;
 };
 
+// Pad number to three digits
+const padNumber = (number) => number.padStart(3, '0');
+
 // Initialize Number Boxes
 const initNumberBoxes = () => {
     const numberBoxesContainer = document.getElementById('numberBoxes');
     data.forEach(number => {
-        const numberBox = createElement('div', 'numberBox', `
+        const numberBox = createElement('div', 'number-box', `
             <div class="number">${number}</div>
-            <div class="amount">Amt: ${getStoredAmount(number)}</div>
-            <div class="users">Users: ${getStoredUsers(number)}</div>
+            <div class="amount">Amt: ${getStoredAmount(number)} ₹</div>
+            <div class="users"><i class="ph ph-user" style="font-size: 20px"></i>: ${getStoredUsers(number)}</div>
         `);
         numberBoxesContainer.appendChild(numberBox);
     });
@@ -47,13 +50,24 @@ const getStoredUsers = (number) => localStorage.getItem(`users${number}`) || 0;
 // Update list
 const updateList = (number, amount, users) => {
     const listContent = document.getElementById('listContent');
-    const newItem = createElement('div', 'list-item', `
-        <span>${listContent.childElementCount + 1}</span>
-        <span>${number}</span>
-        <span>${amount}</span>
-        <span>${users}</span>
-    `);
-    listContent.appendChild(newItem);
+
+    // Check if the item already exists
+    let existingItem = Array.from(listContent.children).find(item => item.children[1].textContent === number);
+
+    if (existingItem) {
+        // Update existing item's amount and users
+        existingItem.children[2].textContent = users;
+        existingItem.children[3].textContent = `${amount}₹`;
+    } else {
+        // Create new item if it doesn't exist
+        const newItem = createElement('div', 'list-item', `
+            <span>${listContent.childElementCount + 1}</span>
+            <span>${number}</span>
+            <span>${users}</span>
+            <span>${amount}₹</span>
+        `);
+        listContent.appendChild(newItem);
+    }
 };
 
 // Update total amount and users
@@ -65,7 +79,7 @@ const updateTotalAmountAndUsers = () => {
         totalUsers += parseInt(getStoredUsers(number));
     });
 
-    document.getElementById('totalAmount').textContent = totalAmount;
+    document.getElementById('totalAmount').textContent = `${totalAmount}₹`;
     document.getElementById('totalUsers').textContent = totalUsers;
 };
 
@@ -79,7 +93,11 @@ const submitNumbers = () => {
             const match = input.match(/(\d+)[\W_]+(\d+)$/);
             if (match) {
                 const amount = parseInt(match[1]);
-                const number = match[2];
+                let number = match[2];
+
+                // Pad the number to 3 digits
+                number = padNumber(number);
+
                 if (data.includes(number)) {
                     processInput(number, amount);
                 } else {
@@ -100,9 +118,11 @@ const processInput = (number, amount) => {
     localStorage.setItem(`amount${number}`, currentAmount);
     localStorage.setItem(`users${number}`, currentUsers);
 
-    document.querySelector(`#numberBoxes .numberBox:nth-child(${data.indexOf(number) + 1}) .amount`).textContent = `Amt: ${currentAmount}`;
-    document.querySelector(`#numberBoxes .numberBox:nth-child(${data.indexOf(number) + 1}) .users`).textContent = `Users: ${currentUsers}`;
+    // Update UI
+    document.querySelector(`#numberBoxes .number-box:nth-child(${data.indexOf(number) + 1}) .amount`).textContent = `Amt: ${currentAmount} ₹`; 
+    document.querySelector(`#numberBoxes .number-box:nth-child(${data.indexOf(number) + 1}) .users`).textContent = `Users: ${currentUsers}`;
 
+    // Update the list
     updateList(number, currentAmount, currentUsers);
     updateTotalAmountAndUsers();
     highlightBox(number);
@@ -110,7 +130,7 @@ const processInput = (number, amount) => {
 
 // Highlight box animation
 const highlightBox = (number) => {
-    const box = document.querySelector(`#numberBoxes .numberBox:nth-child(${data.indexOf(number) + 1})`);
+    const box = document.querySelector(`#numberBoxes .number-box:nth-child(${data.indexOf(number) + 1})`);
     box.classList.add('highlight');
     setTimeout(() => box.classList.remove('highlight'), 1000);
 };
@@ -124,5 +144,30 @@ const resetData = () => {
 // Clear input
 const clearInput = () => document.getElementById('numberInput').value = '';
 
-// Print page
-const printPage = () => window.print();
+// Print page content to save as a text file
+const printPage = () => {
+    let dataToSave = "";
+
+    // Loop through each number box to gather its details
+    document.querySelectorAll(".number-box").forEach((box) => {
+        const number = box.querySelector(".number").textContent;
+        const amount = box.querySelector(".amount").textContent.split(": ")[1];
+        const users = box.querySelector(".users").textContent.split(": ")[1];
+        dataToSave += `Number: ${number}, Amount: ${amount}, Users: ${users}\n`;
+    });
+
+    // Create a Blob from the data and initiate the download
+    const blob = new Blob([dataToSave], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.style.display = "none";
+    document.body.appendChild(a);
+
+    const url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = "number_box_data.txt";
+    a.click();
+
+    // Clean up by revoking the object URL and removing the temporary link
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+};

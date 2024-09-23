@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Number Amount Calculator</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
     <header>
@@ -12,35 +13,33 @@
         <div class="date" id="currentDate"></div>
     </header>
     <main>
-        <div class="container">
-            <div class="left-panel">
-                <div class="list-header">
-                    <span>Sr. no</span>
-                    <span>Number</span>
-                    <span>Users</span>
-                    <span>Amount</span>
-                </div>
-                <div class="list-content" id="list-content"></div>
+        <div class="left-panel">
+            <div class="list-header">
+                <span>Sr. No</span>
+                <span>Number</span>
+                <span>Users</span>
+                <span>Amount</span>
             </div>
-            <div class="center-panel">
-                <textarea id="numberInput" placeholder="Enter Amount and Number"></textarea>
-                <div class="buttons">
-                    <button onclick="submitNumbers()">Submit</button>
-                    <button onclick="resetData()">Reset</button>
-                    <button onclick="clearInput()">Clear</button>
-                    <button onclick="print()">Print</button>
-                </div>
-                <div class="number-boxes" id="numberBoxes"></div>
+            <div class="list-content" id="listContent"></div>
+        </div>
+        <div class="center-panel">
+            <textarea id="numberInput" placeholder="Enter Amount and Number"></textarea>
+            <div class="buttons">
+                <button id="submitButton">Submit</button>
+                <button id="resetButton">Reset</button>
+                <button id="clearButton">Clear</button>
+                <button id="printButton">Print</button>
             </div>
-            <div class="right-panel">
-                <div class="total-amount">
-                    <span>Total Amount:</span>
-                    <span id="totalAmount">0</span>
-                </div>
-                <div class="total-users">
-                    <span>Total Users:</span>
-                    <span id="totalUsers">0</span>
-                </div>
+            <div class="number-boxes" id="numberBoxes"></div>
+        </div>
+        <div class="right-panel">
+            <div class="total-amount">
+                <span class="total-amount-label">Total Amount</span>
+                <span class="total-amount-value" id="totalAmount">0</span>
+            </div>
+            <div class="total-users">
+                <span class="total-users-label">Total Users</span>
+                <span class="total-users-value" id="totalUsers">0</span>
             </div>
         </div>
     </main>
